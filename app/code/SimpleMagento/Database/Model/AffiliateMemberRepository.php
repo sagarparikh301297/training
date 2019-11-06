@@ -90,7 +90,7 @@ class AffiliateMemberRepository implements AffiliateMemberRepositoryInterface
         $this->collectionProcessor->process($searchCriteria,$collection);
         $searchResults = $this->resultInterfaceFactory->create();
         $searchResults->setSearchCriteria($searchCriteria);
-        $searchResults->getItems($collection->getData());
+        $searchResults->setItems($collection->getData());
         $searchResults->setTotalCount($collection->getSize());
         return $searchResults;
     }
