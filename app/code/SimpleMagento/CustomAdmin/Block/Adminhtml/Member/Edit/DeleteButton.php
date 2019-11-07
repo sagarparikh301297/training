@@ -17,14 +17,15 @@ class DeleteButton extends Generic implements ButtonProviderInterface
     public function getButtonData()
     {
         $data = [];
+//        sprintf("location.href = '%s';", $this->getDeleteUrl()),
 
         if($this->getId()){
     //            echo "dfd";exit();
             $data = [
           'label' => __('Delete'),
            'on_click' => 'deleteConfirm(\'' . __(
-                        'Are you sure you want to do this?'
-                    ) . '\', \'' . $this->getDeleteUrl() . '\', {"data": {}})',
+                   'Are you sure you want to do this?'
+               ) . '\', \'' . $this->getDeleteUrl() . '\', {"data": {}})',
           'sort_order' => 20,
           'class' =>'delete',
          ];
@@ -32,6 +33,6 @@ class DeleteButton extends Generic implements ButtonProviderInterface
         return $data;
     }
     public function getDeleteUrl(){
-        return $this->getUrl('/*/*/delete',['id'=>$this->getId()]);
+        return $this->getUrl('*/*/delete',['id'=>$this->getId()]);
     }
 }

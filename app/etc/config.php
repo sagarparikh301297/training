@@ -224,6 +224,7 @@ return [
         'Magento_WishlistSampleData' => 1,
         'SimpleMagento_Attribute' => 1,
         'SimpleMagento_CustomAdmin' => 1,
+        'SimpleMagento_CustomCronJob' => 1,
         'SimpleMagento_Database' => 1,
         'SimpleMagento_FirstModule' => 1,
         'SimpleMagento_HelloWorld' => 1,
