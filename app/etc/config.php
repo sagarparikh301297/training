@@ -223,6 +223,7 @@ return [
         'Magento_WishlistGraphQl' => 1,
         'Magento_WishlistSampleData' => 1,
         'SimpleMagento_Attribute' => 1,
+        'SimpleMagento_BrandExample' => 1,
         'SimpleMagento_CustomAdmin' => 1,
         'SimpleMagento_CustomCronJob' => 1,
         'SimpleMagento_Database' => 1,
