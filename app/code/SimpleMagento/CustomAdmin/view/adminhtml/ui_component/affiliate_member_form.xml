@@ -80,6 +80,44 @@
             </settings>
         </field>
 
+<!--        <field name="image" >-->
+<!--            <argument name="data" xsi:type="array">-->
+<!--                <item name="config" xsi:type="array">-->
+<!--                    <item name="dataType" xsi:type="string">string</item>-->
+<!--                    <item name="source" xsi:type="string">banner</item>-->
+<!--                    <item name="label" xsi:type="string" translate="true">Image</item>-->
+<!--                    <item name="visible" xsi:type="boolean">true</item>-->
+<!--                    <item name="formElement" xsi:type="string">imageUploader</item>-->
+<!--                    <item name="elementTmpl" xsi:type="string">ui/form/element/uploader/uploader</item>-->
+<!--                    <item name="previewTmpl" xsi:type="string">Magento_Catalog/image-preview</item>-->
+<!--                    <item name="validation" xsi:type="array">-->
+<!--                        <item name="required-entry" xsi:type="boolean">true</item>-->
+<!--                    </item>-->
+<!--                    <item name="uploaderConfig" xsi:type="array">-->
+<!--                        <item name="url" xsi:type="url" path="simplemagento_custom_admin/banner/upload" />-->
+<!--                    </item>-->
+<!--                 </item>-->
+<!--            </argument>-->
+<!--        </field>-->
+
+        <field name="logo">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="source" xsi:type="string">helloworld</item>
+                    <item name="label" xsi:type="string" translate="true">Image</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">imageUploader</item>
+                    <item name="elementTmpl" xsi:type="string">ui/form/element/uploader/uploader</item>
+                    <item name="previewTmpl" xsi:type="string">SimpleMagento_CustomAdmin/image-preview</item>
+                    <item name="required" xsi:type="boolean">false</item>
+                    <item name="uploaderConfig" xsi:type="array">
+                        <item name="url" xsi:type="url" path="helloworld/index/upload"/>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
 
     </fieldset>
 </form>
