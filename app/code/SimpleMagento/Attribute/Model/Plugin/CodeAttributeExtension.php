@@ -16,8 +16,14 @@ class CodeAttributeExtension
     public function aroundGetAffiliateMemberById(AffiliateMemberRepository $affiliateMemberRepository, \Closure $proceed, $id){
         $model = $proceed($id);
         $extensionAttributes = $model->getExtensionAttributes();
+
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
+        $logger->info('Array'.print_r($extensionAttributes, true));
+
         if($extensionAttributes == null){
-            $extensionAttributes = $this->extensionFactory->create();
+            $extensionAttributes = $this->affiliateMemberExtensionFactory->create();
         }
         $extensionAttributes->setCode("Code #".$id);
         $model->setExtensionAttributes($extensionAttributes);

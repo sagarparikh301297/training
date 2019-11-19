@@ -1,0 +1,110 @@
+
+<form data-mage-init='{"validation": {}}' id="load_product">
+    <div class="control">
+        <input type="text" name="get_product" id="get_product" class="input-text" placeholder="<?= __('Product SKU') ?>" data-validate="{required:true}" />
+    </div>
+    <button type="submit" class="action-primary"><?= _('Submit') ?></button>
+</form>
+
+<br><br>
+<div id="example" style="visibility: hidden"  > <!-- style="visibility: hidden"  style="position: absolute; right:5%;"-->
+    <hr>
+        <h1 style="float: right;" class="productName"></h1><br><br>
+
+        <h3 class="productPrice"></h3>
+
+        <div id="newProduct">
+
+        </div><br><br>
+        <div class="control">
+            <input type="number" name="qty" id="qty" min="0" value="1" title="Qty" class="input-text qty" data-validate="{&quot;required-number&quot;:true,&quot;validate-item-quantity&quot;:{&quot;minAllowed&quot;:1,&quot;maxAllowed&quot;:10000}}">
+        </div><br><br>
+        <div>
+            <button id="addbutton" > Add</button>
+        </div>
+
+
+</div>
+<div>
+    <hr>
+    <table >
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>SKU</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tabledata">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    require(['jquery'],function(){
+        jQuery(document).ready(function() {
+            jQuery("#load_product").submit(function(e){
+                e.preventDefault();
+
+                var getProduct = jQuery("input[name='get_product']").val();
+                var getQuantity = jQuery("input[name='qty']").val();
+
+                var url = "<?php echo $block->getUrl('viewproduct/loadproduct/index');?>";
+                 jQuery.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {get_product:getProduct},
+                    showLoader: true,
+                    cache: false,
+                    success: function(response) {
+                        console.log(response);
+
+                        if (response.pr.type_id != 'configurable') {
+                            alert("Product is not Configurable Product");
+                        }
+                        else {
+                                    productData = [];
+
+                                    jQuery("#example").css('visibility', 'visible');
+                                    jQuery('.productName').html();
+                                    jQuery('.productName').html(response.pr.name);
+                                    jQuery('.productPrice').html();
+                                    jQuery('.productPrice').html(response.pr.price);
+
+                                    jQuery.each(response.cf, function (index, value) {
+                                        var select = index + '<select class="configurable"  name="' + index + '" >';
+                                        jQuery.each(value, function (key) {
+                                            select += '<option value="' + key + '">' + key + '</option>>'
+                                        });
+                                        select += '</select>';
+                                        jQuery("#newProduct").append(select);
+                                    });
+
+                                        jQuery('#addbutton').click(function () {
+                                            var abc = jQuery('#get_product').val();
+
+                                            jQuery('.configurable').each(function () {
+                                                abc+='-'+jQuery(this).val()
+                                            });
+                                            // jQuery('#sku_table').html(abc);
+                                            // jQuery('#name_table').html(response.pr.name);
+                                            var i = 0;
+                                            jQuery('#qty').each(function () {
+                                                if(jQuery(this).val()) {
+                                                    productData.push({'qty': jQuery(this).val(), 'name': jQuery(response.pr.name).attr('name')});
+                                                    jQuery("#tabledata").append('<tr><td id="tabledataname">' + jQuery(this).attr('name') + '</td><td>' + jQuery(this).val() + '</td></tr>');
+                                                    i++;
+                                                }
+                                            });                                                    //alert(abc);
+                                        });
+
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+
