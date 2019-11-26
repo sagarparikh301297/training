@@ -48,8 +48,7 @@ class Stockcheck extends Action
     public function execute()
     {
         $getProduct = $this->getRequest()->getParam('stock_check');
-//        $productId=$this->product->getb($getProduct);
-        var_dump($getProduct);exit();
+        $productId=$this->product->getIdBySku($getProduct);
         if($productId){
             $productStock = $this->itemRepository->get($productId);
             $productQty = $productStock->getQty();

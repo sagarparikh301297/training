@@ -25,13 +25,6 @@ $_productCollection = $block->getProductCollection();
     <button type="submit" class="action-primary"><?= _('Submit') ?></button>
 </form>
 
-<!--<form data-mage-init='{"validation": {}}' id="load_product">-->
-<!--    <div class="control">-->
-<!--        <input type="text" name="get_product" id="get_product" class="input-text" placeholder="--><?//= __('Product SKU') ?><!--" data-validate="{required:true}" />-->
-<!--    </div>-->
-<!--    <button type="submit" class="action-primary">--><?//= _('Submit') ?><!--</button>-->
-<!--</form>-->
-
 <br><br>
 <div id="example" style="visibility: hidden"  > <!-- style="visibility: hidden"  style="position: absolute; right:5%;"-->
     <hr>
@@ -57,30 +50,26 @@ $_productCollection = $block->getProductCollection();
                 <th>Product Name</th>
                 <th>SKU</th>
                 <th>Quantity</th>
-                <th>Action</th>
+<!--                <th>totalStock</th>-->
             </tr>
         </thead>
         <tbody id="tabledata">
-
         </tbody>
     </table>
     <button id="addtocart" >Add to cart</button>
-
 </div>
 
 <script>
-
    var productData = [];
-
-   var productData = JSON.parse(localStorage.getItem("products"));
-
+   productData = JSON.parse(localStorage.getItem("products"));
+   console.log(productData);
     require(['jquery','lazyloadScript'],function(){
         jQuery(document).ready(function() {
             function drawTable() {
                 var result = JSON.parse(localStorage.getItem('products'));
                 jQuery('#tabledata').empty();
                 jQuery.each(result, function (key, value) {
-                    jQuery("#tabledata").append('<tr><td>' + value.name + '</td><td>' + value.sku + '</td><td>' + value.qty + '</td></tr>');
+                    jQuery("#tabledata").append('<tr><td>' + value.name + '</td><td>' + value.sku + '</td><td>' + value.qty + '</td><td>' + result.totalStock + '</td></tr>');
                 });
             }
             drawTable();
@@ -96,7 +85,6 @@ $_productCollection = $block->getProductCollection();
                     showLoader: true,
                     cache: false,
                     success: function(response) {
-                        // console.log(response);
                         data = response;
                         if (!jQuery.trim(response)) {
                             alert("Product is not configurable");
@@ -109,7 +97,6 @@ $_productCollection = $block->getProductCollection();
                             jQuery('.productPrice').html('');
                             jQuery('.productPrice').html(response.price+'$');
                             jQuery.each(response.config, function (index,value) {
-                                // console.log(value);
                                 var select = value.label + '<select class="configurable"  name="' + index + '" >';
                                 jQuery.each(value.values, function (key, opt) {
                                     select += '<option value="' + opt.value_index + '">' + opt.label + '</option>>'
@@ -121,30 +108,36 @@ $_productCollection = $block->getProductCollection();
                     }
                 });
             });
-
             jQuery("#addbutton").click(function(){
                 var sku = jQuery('#get_product').val();
                 var getQuantity = jQuery("input[name='qty']").val();
                 var productData2 = [];
+                var arr2 = [];
                 var arr = {};
                 jQuery('.configurable').each(function () {
-                     arr[jQuery(this).attr('name')] = jQuery(this).val();
-                     sku+='-'+jQuery(this).find('option:selected').text();
+                    arr[jQuery(this).attr('name')] = jQuery(this).val();
+                         arr2.push(jQuery(this).find('option:selected').text());
                  });
+                arr2 = arr2.reverse();
+                var i = 0;
+                jQuery.each(arr2,function () {
+                    sku+='-'+arr2[i];
+                    i++;
+                });
+                var totalStock = '';
                 var url = "<?php echo $block->getUrl('viewproduct/loadproduct/stockcheck');?>";
                 jQuery.ajax({
                     url: url,
                     type: "POST",
-                    data: {stock_check:data.id},
+                    data: {stock_check:sku},
                     showLoader: true,
                     cache: false,
                     success: function(response) {
-                        console.log(response);
+                        totalStock = response;
                     }
                 });
-                productData2.push({'qty': getQuantity,  'name': data.name, 'sku': sku, 'id':data.id, 'super_attribute': arr});
-                // console.log(productData2);
-                // alert(sku);
+                // console.log(totalStock);
+                productData2.push({'qty': getQuantity,  'name': data.name, 'sku': sku, 'id':data.id, 'super_attribute': arr, 'totalStock': totalStock});
                 if(productData == null){
                     localStorage.setItem("products", JSON.stringify(productData2));
                     productData = JSON.parse(localStorage.getItem("products"));
@@ -156,7 +149,6 @@ $_productCollection = $block->getProductCollection();
             });
         });
     });
-
    require(['jquery'],function(){
        jQuery(document).ready(function() {
            jQuery("#addtocart").click(function(){
@@ -168,13 +160,11 @@ $_productCollection = $block->getProductCollection();
                    showLoader: true,
                    cache: false,
                    success: function(response) {
-                       console.log(response);
                    }
                });location.reload();
            });
        });
    });
-
 </script>
 
 
