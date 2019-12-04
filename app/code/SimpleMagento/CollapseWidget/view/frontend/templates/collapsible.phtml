@@ -1,14 +1,23 @@
-<div id="my-collapsible" data-mage-init='{"SimpleMagento_CollapseWidget/js/dynamic-collapsible": {"ajaxContent": true} }'> <!-- {"active": true, "saveState": true} -->
-    <div data-role="title">
-        <h2> how collaspisble widget <button data-role="trugger">Go</button> </h2>
-    </div>
-    <div id="example" data-role="content"></div>
-    <a href="<?= $block->getViewFileUrl('SimpleMagento_CollapseWidget/example-content.html') ?>" data-ajax="true"></a>
-</div>
+<?php declare(strict_types=1);
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
 
-<!--<form data-mage-init='{"validation": {}}'>-->
-<!--    <div class="control">-->
-<!--        <input type="text" name="email" id="email" class="input-text" placeholder="--><?//= __('Your email') ?><!--" data-validate="{required:true, 'validate-email':true}" />-->
-<!--    </div>-->
-<!--    <button type="submit" class="action-primary">--><?//= _('Submit') ?><!--</button>-->
-<!--</form>-->
+
+<script type="text/x-magento-init">
+    {
+        "*":{
+            "Magento_Ui/js/core/app":{
+                "components":{
+                    "startSimple":{
+                        "component":"SimpleMagento_CollapseWidget/js/plain-view-model",
+                        "base-url":"<?= $block->escapeJs($block->getBaseUrl()) ?>   "
+                    }
+                }
+            }
+        }
+    }
+</script>
+<div data-bind="scope: 'startSimple'">
+<!--    <h2 data-bind="text: title"></h2>-->
+    <pre data-bind="text: output"></pre>
+</div>

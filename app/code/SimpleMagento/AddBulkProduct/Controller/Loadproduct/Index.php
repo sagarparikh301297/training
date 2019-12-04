@@ -13,7 +13,7 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-
+use Magento\Swatches\Model\Swatch;
 
 class Index extends Action
 {
@@ -34,21 +34,25 @@ class Index extends Action
      * @var Configurable
      */
     protected $configurable;
-
+    /**
+     * @var Swatch
+     */
+    protected $swatchHelper;
 
 
     public function __construct(Context $context,
                                 PageFactory $pageFactory,
                                 ProductRepository $productRepository,
                                 JsonFactory $jsonFactory,
-                                Configurable $configurable
-        )
+                                Configurable $configurable,
+                                Swatch $swatchHelper)
     {
         parent::__construct($context);
         $this->pageFactory = $pageFactory;
         $this->jsonFactory = $jsonFactory;
         $this->productRepository = $productRepository;
         $this->configurable = $configurable;
+        $this->swatchHelper = $swatchHelper;
     }
 
     /**
@@ -69,17 +73,14 @@ class Index extends Action
                $data['sku'] = $productDetail->getSku();
                $data['price'] = $productDetail->getFinalPrice();
                $data['stock'] = $productDetail->getQuantityAndStockStatus();
-               $data['config']= $this->configurable->getConfigurableAttributesAsArray($productDetail);
+               $data['config'] = $this->configurable->getConfigurableAttributesAsArray($productDetail);
+
 
                $result = $this->jsonFactory->create();
                $result->setData($data);
                return $result;
         }
-
         return  $this->pageFactory->create();
-
-
-
     }
 }
 

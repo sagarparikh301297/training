@@ -65,16 +65,12 @@ class Cartadd extends Action
     {
         $response = [];
         $getProduct = $this->getRequest()->getParam('add_tocart');
-//                var_dump($getProduct);exit();
-
         foreach($getProduct as $user) {
             try {
                 $params['form_key'] = $this->formKey->getFormKey();
                 $params['super_attribute'] = $user['super_attribute'];
                 $params['qty'] = $user['qty'];
-//                $id[] = $user['id'];
                 $productId = $this->productRepository->getById($user['id']);
-//                var_dump($productId);exit();
                 $this->cart->addProduct($productId, $params);
                 $this->cart->save();
             }
@@ -82,16 +78,6 @@ class Cartadd extends Action
                 $response['message'] = $e->getMessage();
             }
         }
-//        $size = sizeof($sku);
-
-//        for($i=0;$i<$size;$i++){
-//            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-//            $productId[] = $objectManager->get('Magento\Catalog\Model\Product')->getIdBySku($sku[$i]);
-//            if($productId > 0)
-//            {
-
-//            }
-
         $result = $this->jsonFactory->create();
         $result->setData($response);
         return $result;

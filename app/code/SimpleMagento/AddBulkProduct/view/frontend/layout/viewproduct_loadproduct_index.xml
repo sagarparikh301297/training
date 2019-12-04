@@ -9,7 +9,6 @@
     <body>
         <referenceContainer name="content">
             <block class="SimpleMagento\AddBulkProduct\Block\Index"  template="SimpleMagento_AddBulkProduct::viewproduct.phtml">
-
             </block>
         </referenceContainer>
     </body>

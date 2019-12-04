@@ -61,6 +61,5 @@ class Stockcheck extends Action
             $result->setData($error);
             return $result;
         }
-
     }
 }

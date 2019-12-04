@@ -4,26 +4,19 @@ const PARAM_NAME_URL_ENCODED = 'uenc';
 use Magento\Framework\App\Action\Action;
 $_productCollection = $block->getProductCollection();
 ?>
-<?php //foreach ($_productCollection as $_product): ?>
-<?php //$postParams = $block->getAddToCartPostParams($_product);?>
-<?php //echo $_product->getSku();  ?><!--<br>-->
-<?php //endforeach;?>
-<!--<head>-->
-<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css" rel="stylesheet" />-->
-<!--</head>-->
-<!--<div data-mage-init='{"SimpleMagento_AddBulkProduct/js/get-content": {"ajaxContent": true} }'>-->
+
     <form data-mage-init='{"validation": {}}' id="load_product">
         <div class="control">
             <select id="get_product" name="get_product">
-                <?php foreach ($_productCollection as $_product): ?>
-                <?php $postParams = $block->getAddToCartPostParams($_product);?>
-                <option value="<?php echo $_product->getSku();  ?>"><?php echo $_product->getSku();  ?></option>
+                <?php foreach ($_productCollection as $_products): ?>
+                <?php $postParams = $block->getAddToCartPostParams($_products);?>
+                <option value="<?php echo $_products->getSku();  ?>"><?php echo $_products->getSku();  ?></option>
                 <?php endforeach;?>
             </select>
-
         </div>
         <button type="submit" class="action-primary"><?= _('Submit') ?></button>
     </form>
+
     <br><br>
     <div id="example" style="visibility: hidden"  > <!-- style="visibility: hidden"  style="position: absolute; right:5%;"-->
         <hr>
@@ -49,7 +42,6 @@ $_productCollection = $block->getProductCollection();
                     <th>Product Name</th>
                     <th>SKU</th>
                     <th>Quantity</th>
-                    <th>Total-Stock</th>
                 </tr>
             </thead>
             <tbody id="tabledata">
@@ -57,123 +49,10 @@ $_productCollection = $block->getProductCollection();
         </table>
         <button id="addtocart" >Add to cart</button>
     </div>
-<!--</div>-->
+
+
 <script>
-    var productData = [];
-    productData = JSON.parse(localStorage.getItem("products"));
-    console.log(productData);
-    require(['jquery'],function(){
-        jQuery(document).ready(function() {
-            function drawTable() {
-                var result = JSON.parse(localStorage.getItem('products'));
-                jQuery('#tabledata').empty();
-                jQuery.each(result, function (key, value) {
-                    jQuery("#tabledata").append('<tr><td>' + value.name + '</td><td>' + value.sku + '</td><td>' + value.qty + '</td><td>' + value.total + '</td></tr>');
-                });
-            }
-            drawTable();
-            var data = '';
-            jQuery("#load_product").submit(function(e){
-                e.preventDefault();
-                var getProduct = jQuery("#get_product").val();
-                var url = "<?php echo $block->getUrl('viewproduct/loadproduct/index');?>";
-                jQuery.ajax({
-                    url: url,
-                    type: "POST",
-                    data: {get_product:getProduct},
-                    showLoader: true,
-                    cache: false,
-                    success: function(response) {
-                        data = response;
-                        if (!jQuery.trim(response)) {
-                            alert("Product is not configurable");
-                            location.reload();
-                        } else {
-                            jQuery("#newProduct").html('');
-                            jQuery("#example").css('visibility', 'visible');
-                            jQuery('.productName').html('');
-                            jQuery('.productName').html(response.name);
-                            jQuery('.productPrice').html('');
-                            jQuery('.productPrice').html(response.price+'$');
-                            jQuery.each(response.config, function (index,value) {
-                                var select = value.label + '<select class="configurable"  name="' + index + '" >';
-                                jQuery.each(value.values, function (key, opt) {
-                                    select += '<option value="' + opt.value_index + '">' + opt.label + '</option>>'
-                                });
-                                select += '</select>';
-                                jQuery("#newProduct").append(select);
-                            });
-                        }
-                    }
-                });
-            });
-            jQuery("#addbutton").click(function(){
-                var sku = jQuery('#get_product').val();
-                var getQuantity = jQuery("input[name='qty']").val();
-                var productData2 = [];
-                var arr2 = [];
-                var arr = {};
-                jQuery('.configurable').each(function () {
-                    arr[jQuery(this).attr('name')] = jQuery(this).val();
-                    arr2.push(jQuery(this).find('option:selected').text());
-                });
-                arr2 = arr2.reverse();
-                var i = 0;
-                jQuery.each(arr2,function () {
-                    sku+='-'+arr2[i];
-                    i++;
-                });
-                var totalStock = '';
-                var url = "<?php echo $block->getUrl('viewproduct/loadproduct/stockcheck');?>";
-                jQuery.ajax({
-                    url: url,
-                    type: "POST",
-                    data: {stock_check:sku},
-                    showLoader: true,
-                    cache: false,
-                    success: function(response) {
-                        totalStock = response;
-                        dataPush();
-                    }
-                });
-                function dataPush() {
-                    if(getQuantity>totalStock){
-                         alert("You can not add "+getQuantity+" Quantity")
-                    }
-                    else{
-                        productData2.push({'qty': getQuantity,  'name': data.name, 'sku': sku, 'id':data.id, 'super_attribute': arr, 'total': totalStock});
-                        if(productData == null){
-                            localStorage.setItem("products", JSON.stringify(productData2));
-                            productData = JSON.parse(localStorage.getItem("products"));
-                        }else{
-                            productData = productData.concat(productData2);
-                            localStorage.setItem("products", JSON.stringify(productData));
-                             }
-                    drawTable();
-                    }
-                }
-            });
-        });
-    });
-    require(['jquery'],function(){
-        jQuery(document).ready(function() {
-            jQuery("#addtocart").click(function(){
-                var url = "<?php echo $block->getUrl('viewproduct/loadproduct/cartadd');?>";
-                jQuery.ajax({
-                    url: url,
-                    type: "POST",
-                    data: {add_tocart:productData},
-                    showLoader: true,
-                    cache: false,
-                    success: function(response) {
-                        removeData();
-                    }
-                });
-                function removeData(){
-                    localStorage.removeItem("products");
-                    location.reload();
-                }
-            });
-        });
-    });
+    require(['bulkrequire'],function($){
+
+});
 </script>
