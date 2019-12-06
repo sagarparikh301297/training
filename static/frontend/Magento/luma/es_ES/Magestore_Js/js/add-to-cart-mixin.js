@@ -1,0 +1,1 @@
+/var/www/html/magento/app/code/Magestore/Js/view/frontend/web/js/add-to-cart-mixin.js
